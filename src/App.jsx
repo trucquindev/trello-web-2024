@@ -1,6 +1,3 @@
-
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
 import { useColorScheme } from '@mui/material/styles'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -10,6 +7,8 @@ import LightModeIcon from '@mui/icons-material/LightMode'
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness'
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import Box from '@mui/material/Box';
+import { Container } from '@mui/material'
+import theme from './theme'
 function App() {
   function SelectDarkLight() {
     const { mode, setMode } = useColorScheme();
@@ -46,19 +45,35 @@ function App() {
     );
   }
   return (
-    <>
-      <SelectDarkLight/>
-      <hr/>
-      <div>Quỳnh dep</div>
-      <Typography variant="h1" color='text.secondary'>
-        h1. Heading
-      </Typography>
-
-
-      <Button variant="text">Text</Button>
-      <Button variant="contained">Contained</Button>
-      <Button variant="outlined">Outlined</Button>
-    </>
+    <Container disableGutters maxWidth={false} sx={ { height:'100vh', backgroundColor:'primary.main' } }>
+      <Box sx={ {
+        backgroundColor:'primary.light',
+        width:'100%',
+        height: (theme) => theme.trello.appBarHeight,
+        display:'flex',
+        alignItems:'center'
+      } }>
+        <SelectDarkLight/>
+      </Box>
+      <Box sx={ {
+        backgroundColor:'primary.dark',
+        width:'100%',
+        height: (theme) => theme.trello.boardBarHeight,
+        display:'flex',
+        alignItems:'center'
+      } }>
+        Board app
+      </Box>
+      <Box sx={ {
+        backgroundColor:'primary.main',
+        width:'100%',
+        height:(theme) => `calc(100vh - ${theme.trello.appBarHeight} - ${theme.trello.boardBarHeight})`,
+        display:'flex',
+        alignItems:'center'
+      } }>
+        Board Content
+      </Box>
+    </Container>
   )
 }
 
