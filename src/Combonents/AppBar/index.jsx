@@ -13,6 +13,7 @@ import Badge from '@mui/material/Badge'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
 import Profiles from './Menus/Profiles'
+import HelpIcon from '@mui/icons-material/Help';
 const AppBar = () => {
   return (
     <Box sx={ {
@@ -34,13 +35,17 @@ const AppBar = () => {
         <Starred/>
         <Templates/>
       </Box>
-      <Box sx={ { display:'flex', alignItems:'center', justifyContent:'center', gap:1 } }>
+      <Box sx={ { display:'flex', alignItems:'center', justifyContent:'center', gap:1.5 } }>
         <TextField id="outlined-search" label="Search..." type="search" size='small'/>
         <SelectDarkLight/>
         <Tooltip title='Notifications' >
           <Badge color="secondary" variant="dot" sx={ { cursor:'pointer' } }>
-            <NotificationsNoneIcon />
+            <NotificationsNoneIcon sx={{ color: 'primary.main' }}/>
           </Badge>
+        </Tooltip>
+
+        <Tooltip title='Help' >
+          <HelpIcon sx={{ color: 'primary.main' }}/>
         </Tooltip>
         <Profiles/>
       </Box>

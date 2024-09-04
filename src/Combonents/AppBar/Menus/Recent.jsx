@@ -27,7 +27,7 @@ const Recent = () => {
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon/>}
       >
-        recent
+        Recent
       </Button>
       <Menu
         id="basic-menu-recent"

@@ -23,7 +23,7 @@ const Templates = () => {
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon/>}
       >
-        templates
+        Templates
       </Button>
       <Menu
         id="basic-menu-templates"
