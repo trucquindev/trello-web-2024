@@ -13,9 +13,10 @@ function SelectDarkLight() {
     setMode(event.target.value)
   };
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+    <FormControl size="small">
       <InputLabel id="select-dark-light-system">Mode</InputLabel>
       <Select
+        sx={{ height: '37.13px' }}
         labelId="select-dark-light-system"
         id="dark-light-system"
         value={mode}

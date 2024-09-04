@@ -27,7 +27,7 @@ const Starred = () => {
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon/>}
       >
-        starred
+        Starred
       </Button>
       <Menu
         id="basic-menu-starred"
