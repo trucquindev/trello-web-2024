@@ -14,9 +14,20 @@ function SelectDarkLight() {
   };
   return (
     <FormControl size="small" sx={{ minWidth:120 }}>
-      <InputLabel id="select-dark-light-system">Mode</InputLabel>
+      <InputLabel
+        id="select-dark-light-system"
+        sx={{ color:'white', '&.Mui-focused': { color:'white' } }}>
+          Mode
+      </InputLabel>
       <Select
-        sx={{ height: '37.13px' }}
+        sx={{
+          height: '37.13px',
+          color:'white',
+          '.MuiOutlinedInput-notchedOutline': { borderColor:'white' },
+          '&:hover .MuiOutlinedInput-notchedOutline': { borderColor:'white' },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor:'white' },
+          '.MuiSvgIcon-root': { color:'white' },
+        }}
         labelId="select-dark-light-system"
         id="dark-light-system"
         value={mode}
