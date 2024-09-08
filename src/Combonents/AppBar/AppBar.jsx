@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Button } from '@mui/material'
-import SelectDarkLight from '~/Combonents/ModelSelect'
+import SelectDarkLight from '~/Combonents/ModeSelect/ModeSelect'
 import SvgIcon from '@mui/material/SvgIcon'
 import AppsIcon from '@mui/icons-material/Apps'
 import { ReactComponent as TrelloIcon } from '~/assets/mdi--trello.svg'
@@ -30,7 +30,7 @@ const AppBar = () => {
     setOpen(newOpen);
   };
   const DrawerList = (
-    <Box sx={{ width: 200, bgcolor:'blue', height:'100%'}}>
+    <Box sx={{ width: 200, bgcolor:'blue', height:'100%' }}>
       <List>
         <ListItem disablePadding>
           <ListItemButton>
