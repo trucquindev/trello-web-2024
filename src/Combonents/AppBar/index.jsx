@@ -30,7 +30,7 @@ const AppBar = () => {
     setOpen(newOpen);
   };
   const DrawerList = (
-    <Box sx={{ width: 200 }} role="presentation">
+    <Box sx={{ width: 200, bgcolor:'blue', height:'100%'}}>
       <List>
         <ListItem disablePadding>
           <ListItemButton>
