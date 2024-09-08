@@ -1,7 +1,7 @@
 import { Container } from '@mui/material'
-import AppBar from '~/Combonents/AppBar'
-import BoardBar from './BoardBar'
-import BoardContent from './BoardContent'
+import AppBar from '~/Combonents/AppBar/AppBar'
+import BoardBar from './BoardBar/BoardBar'
+import BoardContent from './BoardContent/BoardContent'
 const Board = () => {
   return (
     <Container disableGutters maxWidth={false} sx={ { height:'100vh' } }>
