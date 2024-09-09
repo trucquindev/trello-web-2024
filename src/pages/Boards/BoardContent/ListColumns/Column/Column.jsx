@@ -17,13 +17,15 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 import { Button } from '@mui/material'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCards from './ListCards/ListCards'
-const Column = () => {
+import { mapOder } from '~/untils/sort'
+const Column = ({ column }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl)
   const handleClick = (event) => { setAnchorEl(event.currentTarget) };
   const handleClose = () => {
     setAnchorEl(null)
   };
+  const orderedCards= mapOder(column?.cards, column?.cardOrderIds, '_id')
   return (
     <Box sx={{
       minWidth:'300px',
@@ -47,7 +49,7 @@ const Column = () => {
           fontWeight: 'bold',
           cursor: 'pointer'
         }}>
-          Column Title</Typography>
+          {column.title}</Typography>
         <Box>
           <Tooltip title="More options">
             <KeyboardArrowDownIcon
@@ -105,7 +107,7 @@ const Column = () => {
         </Box>
       </Box>
       {/*list card */}
-      <ListCards/>
+      <ListCards cards={orderedCards}/>
       {/* Box column footer */}
       <Box sx={{
         height:(theme) => (theme.trello.columnFooterHeight),

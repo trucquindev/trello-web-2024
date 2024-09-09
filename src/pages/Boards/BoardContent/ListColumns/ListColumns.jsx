@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Column from './Column/Column'
 import { Button } from '@mui/material'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-const ListColumns = () => {
+const ListColumns = ({ columns }) => {
   return (
     <Box sx={{
       bgcolor:'inherit',
@@ -14,8 +14,7 @@ const ListColumns = () => {
       '&::-webkit-scrollbar-track':{ margin:2 }
     }}>
       {/* Box column test 01*/}
-      <Column/>
-      <Column/>
+      {columns?.map((column) => (<Column key={column?._id} column={column} />))}
       {/* Box add new column CTA */}
       <Box sx={{
         minWidth:'200px',

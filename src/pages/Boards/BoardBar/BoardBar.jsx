@@ -19,7 +19,7 @@ const menu_style = {
   '&:hover': {
     bgcolor: 'primary.50  '
   } }
-const BoardBar = () => {
+const BoardBar = ({ board }) => {
   return (
     <Box sx={ {
       width:'100%',
@@ -36,12 +36,12 @@ const BoardBar = () => {
         <Chip
           sx={menu_style}
           icon={<DashboardIcon />}
-          label="Quindev - Một lập trình viên"
+          label={board?.title}
           clickable/>
         <Chip
           sx={menu_style}
           icon={<VpnLockIcon />}
-          label="Public/Private Workspace"
+          label={ `${board?.type?.charAt(0).toUpperCase()}${board?.type.slice(1)}`}
           clickable/>
         <Chip
           sx={menu_style}
