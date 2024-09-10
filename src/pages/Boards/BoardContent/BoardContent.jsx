@@ -1,13 +1,14 @@
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { mapOder } from '~/untils/sort'
-import { DndContext, PointerSensor, useSensor, useSensors, MouseSensor, TouchSensor } from '@dnd-kit/core'
+import { DndContext, PointerSensor, useSensor, useSensors, MouseSensor, TouchSensor, DragOverlay, defaultDropAnimationSideEffects} from '@dnd-kit/core'
 import { useEffect, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable';
-
+import Card from './ListColumns/Column/ListCards/Card/Card'
+import Column from './ListColumns/Column/Column'
 const BoardContent = ({ board }) => {
   //https://docs.dndkit.com/api-documentation/sensors
-  const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
+  // const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
 
   // yêu cầu chuột di chuyển 10px mới bắt sự kiện
   const mouseSensor = useSensor(MouseSensor, { activationConstraint:{ distance:10 } })
@@ -20,16 +21,16 @@ const BoardContent = ({ board }) => {
   const sensors = useSensors(mouseSensor, touchSensor)
 
   const [orderedColumns, setOrderedColumns] = useState([])
+  const [activeDragItemData, setActiveDragItemData] = useState(null)
+
   useEffect(() => {
     setOrderedColumns(mapOder(board?.columns, board?.columnOrderIds, '_id'))
   }, [board])
 
   const handleDragStart = (event) =>{
-    console.log('handleDagstart: ', event)
+    setActiveDragItemData(event.active.data.current)
   }
-
   const handleDragEnd = (event) => {
-    console.log(event)
     const { active, over } = event
     if ( !over ) return
     //nếu vị trí sau khi kéo thả khác vị trí ban đầu
@@ -45,8 +46,18 @@ const BoardContent = ({ board }) => {
 
       // cập nhật lại state columns sau khi đã kéo thả
       setOrderedColumns(dndOrderedColumns)
+      setActiveDragItemData(null)
     }
   }
+  const dropAnimation  = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: '0.5',
+        },
+      },
+    }),
+  };
   return (
     <DndContext
       sensors={sensors}
@@ -60,6 +71,10 @@ const BoardContent = ({ board }) => {
         p:'10px 0',
       } }>
         <ListColumns columns={orderedColumns}/>
+        <DragOverlay dropAnimation={dropAnimation}>
+          {!!activeDragItemData?.columnId && null}
+          {activeDragItemData?.columnId ===undefined ? <Column column={activeDragItemData}/> : <Card card={activeDragItemData}/>}
+        </DragOverlay>
       </Box>
     </DndContext>
   )
