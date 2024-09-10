@@ -33,7 +33,7 @@ const Column = ({ column }) => {
     // touchAction:'none', // dùng cho sensorpoiter
     transition,
     height:'100%',
-    opacity: isDragging ? 0.5: undefined
+    opacity: isDragging ? 0.5: undefined,
   };
   //mở menu
   const [anchorEl, setAnchorEl] = useState(null);
