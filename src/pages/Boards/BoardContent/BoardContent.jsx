@@ -2,12 +2,12 @@
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { mapOder } from '~/untils/sort'
-import { DndContext, useSensor, useSensors, MouseSensor, TouchSensor, DragOverlay, defaultDropAnimationSideEffects, closestCorners,closestCenter, getFirstCollision } from '@dnd-kit/core'
+import { DndContext, useSensor, useSensors, MouseSensor, TouchSensor, DragOverlay, defaultDropAnimationSideEffects, closestCorners, getFirstCollision } from '@dnd-kit/core'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable';
 import Card from './ListColumns/Column/ListCards/Card/Card'
 import Column from './ListColumns/Column/Column'
-import { pointerWithin, rectIntersection } from '@dnd-kit/core'
+import { pointerWithin } from '@dnd-kit/core'
 import { cloneDeep } from 'lodash'
 const BoardContent = ({ board }) => {
   //https://docs.dndkit.com/api-documentation/sensors
@@ -114,7 +114,6 @@ const BoardContent = ({ board }) => {
     const overColumn= findColumnByCardId(overCardId)
 
     if (!activeColumn || !overColumn) return
-
     // nếu 2 column khác nhau và có card
     if (activeColumn._id!== overColumn._id) {
       moveCardBetweenColumns(
@@ -210,25 +209,28 @@ const BoardContent = ({ board }) => {
       return closestCorners({ ...args })
     }
     const pointerInteractions = pointerWithin(args)
-    // thuật toán phát hiên va chạm sẽ trả về 1 mảng các va chạm
-    const intersections = !!pointerInteractions?.length ? pointerInteractions : rectIntersection(args)
-    // tim id dau tien trong dam intersections
-    let overId = getFirstCollision(intersections, 'id')
+    if (!pointerInteractions?.length) return
+    // thuật toán phát hiên va chạm sẽ trả về 1 mảng các va chạm dòng trên thay thế fix triệt để flicking
+    // const intersections = !!pointerInteractions?.length ? pointerInteractions : rectIntersection(args)
+    // tim id dau tien trong dam pointerInteractions
+    let overId = getFirstCollision(pointerInteractions, 'id')
     if (overId) {
       // neeu no la column thi tim toi cai card gan nhat
       const checkColumn = orderedColumns.find(c => c._id === overId)
       if (checkColumn) {
-        overId= closestCenter({
+        // console.log('over before', overId)
+        overId= closestCorners({
           ...args,
           droppableContainers: args.droppableContainers.filter(container => container.id !== overId && checkColumn?.cardOrderIds?.includes(container.id))
         })[0]?.id
+        // console.log('over after', overId);
       }
       lastOverID.current = overId
       return [{ id: overId }]
     }
 
     return lastOverID.current ? [{ id: lastOverID.current }]: []
-  }, [activeDragItemData?.columnId])
+  }, [activeDragItemData?.columnId, orderedColumns])
   return (
     <DndContext
       // cảm biến
