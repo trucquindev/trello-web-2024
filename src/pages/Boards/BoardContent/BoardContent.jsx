@@ -8,7 +8,8 @@ import { arrayMove } from '@dnd-kit/sortable';
 import Card from './ListColumns/Column/ListCards/Card/Card'
 import Column from './ListColumns/Column/Column'
 import { pointerWithin } from '@dnd-kit/core'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
+import { generatePlaceholderCard } from '~/untils/formatters'
 const BoardContent = ({ board }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
@@ -62,8 +63,14 @@ const BoardContent = ({ board }) => {
       const nextActiveColumn = nextColumns.find(column => column._id === activeColumn._id)
       const nextOverColumn = nextColumns.find(column => column._id === overColumn._id)
       if (nextActiveColumn) {
-        //
+        //nextActivecolumn :column cũ
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
+
+        //check xem đã kéo hết card chưa
+        //them card roong vao
+        if (isEmpty(nextActiveColumn.cards)) {
+          nextActiveColumn.cards= [generatePlaceholderCard(nextActiveColumn)]
+        }
         // cập nhật lại dữ liệu mảng cardOrderIds cho chuẩn
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)
       }
@@ -79,6 +86,9 @@ const BoardContent = ({ board }) => {
             columnId: overColumn._id,
           }
         )
+        //xoas placeholder card di
+        nextOverColumn.cards= nextOverColumn?.cards.filter(card => !card.FE_placeholderCard)
+
         // cập nhật lại dữ liệu mảng cardOrderIds cho chuẩn
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
