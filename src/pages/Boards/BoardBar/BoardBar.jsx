@@ -33,15 +33,17 @@ const BoardBar = ({ board }) => {
       bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2')
     } }>
       <Box sx={ { display:'flex', alignItems:'center', justifyContent:'center', gap:1 } }>
-        <Chip
-          sx={menu_style}
-          icon={<DashboardIcon />}
-          label={board?.title}
-          clickable/>
+        <Tooltip title={board?.description}>
+          <Chip
+            sx={menu_style}
+            icon={<DashboardIcon />}
+            label={board?.title}
+            clickable/>
+        </Tooltip>
         <Chip
           sx={menu_style}
           icon={<VpnLockIcon />}
-          label={ `${board?.type?.charAt(0).toUpperCase()}${board?.type.slice(1)}`}
+          label={ `${board?.type?.charAt(0)?.toUpperCase() || ''}${board?.type?.slice(1) || ''}`}
           clickable/>
         <Chip
           sx={menu_style}
