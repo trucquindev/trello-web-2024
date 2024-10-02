@@ -5,6 +5,7 @@ import BoardContent from './BoardContent/BoardContent'
 // import { mockData } from '~/apis/mock-data'
 import { useState, useEffect } from 'react'
 import { fetchBoardDetailsApi } from '~/apis'
+import { mockData } from '~/apis/mock-data'
 const Board = () => {
 
   const [board, setBoard] = useState(null)
@@ -19,8 +20,8 @@ const Board = () => {
   return (
     <Container disableGutters maxWidth={false} sx={ { height:'100vh' } }>
       <AppBar/>
-      <BoardBar board={board} />
-      <BoardContent board={board} />
+      <BoardBar board={mockData.board} />
+      <BoardContent board={mockData.board} />
     </Container>
   )
 }
