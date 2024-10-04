@@ -5,14 +5,15 @@ import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import CloseIcon from '@mui/icons-material/Close'
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
+import { useState } from 'react'
+import { toast } from 'react-toastify'
 const ListColumns = ({ columns }) => {
   const [newColumnForm, setNewColumnForm] = useState(false)
   const [valueColumnTitle, setValueColumnTitle] = useState('')
   const toggleNewColumnForm = () => setNewColumnForm(!newColumnForm)
   const addNewCoulmn = () => {
     if (!valueColumnTitle) {
-      alert('Please insert a title for the new column')
+      toast.error('Please insert a title for the new column')
       return
     }
 
