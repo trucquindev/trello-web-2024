@@ -21,7 +21,8 @@ import { mapOder } from '~/untils/sort'
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import CloseIcon from '@mui/icons-material/Close'
-import TextField from '@mui/material/TextField';
+import TextField from '@mui/material/TextField'
+import { toast } from 'react-toastify'
 
 const Column = ({ column }) => {
   //kéo thả
@@ -51,7 +52,9 @@ const Column = ({ column }) => {
   const toggleNewCardForm = () => setNewCardForm(!newCardForm)
   const addNewCard = () => {
     if (!valueCardTitle) {
-      alert('Please insert a title for the new Card')
+      toast.error('Please insert a title for the new Card', {
+        position: 'bottom-right'
+      })
       return
     }
 
