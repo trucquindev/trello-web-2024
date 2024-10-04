@@ -2,7 +2,10 @@
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
 import { mapOder } from '~/untils/sort'
-import { DndContext, useSensor, useSensors, MouseSensor, TouchSensor, DragOverlay, defaultDropAnimationSideEffects, closestCorners, getFirstCollision } from '@dnd-kit/core'
+import { DndContext, useSensor, useSensors,
+  // MouseSensor, TouchSensor,
+  DragOverlay, defaultDropAnimationSideEffects, closestCorners, getFirstCollision } from '@dnd-kit/core'
+import { MouseSensor, TouchSensor } from '~/customLibraries/DndkitSensors'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { arrayMove } from '@dnd-kit/sortable';
 import Card from './ListColumns/Column/ListCards/Card/Card'
