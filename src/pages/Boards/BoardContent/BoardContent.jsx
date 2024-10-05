@@ -13,7 +13,7 @@ import Column from './ListColumns/Column/Column'
 import { pointerWithin } from '@dnd-kit/core'
 import { cloneDeep, isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/untils/formatters'
-const BoardContent = ({ board, createNewColumn, createNewCard }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
   // yêu cầu chuột di chuyển 10px mới bắt sự kiện
@@ -143,7 +143,7 @@ const BoardContent = ({ board, createNewColumn, createNewCard }) => {
   const handleDragEnd = (event) => {
     const { active, over } = event
     if ( !over ) return
-
+    // xử lí khi kéo thả card
     if (activeDragItemData?.columnId !==undefined) {
       //activeDraggingCardId là card đang được kéo
       const { id: activeDraggingCardId, data: { current: activeDraggingCardData } }= active
@@ -194,11 +194,10 @@ const BoardContent = ({ board, createNewColumn, createNewCard }) => {
         //dung arraymove để sắp xếp dữ liệu sau khi drag
         const dndOrderedColumns= arrayMove(orderedColumns, oldColumnIndex, newColumnIndex);
 
-        //sau nay xu ly api
-        // const dndOrderedColumnsIds= dndOrderedColumns.map(c => c._id)
-        // console.log(dndOrderedColumnsIds);
+        // gọi api update drag column
+        moveColumns(dndOrderedColumns)
 
-        // cập nhật lại state columns sau khi đã kéo thả
+        // cập nhật lại state columns sau khi đã kéo thả van dung cai nay sau khi call api de giao dien muot ma
         setOrderedColumns(dndOrderedColumns)
       }
     }
