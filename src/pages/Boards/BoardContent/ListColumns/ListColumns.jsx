@@ -2,21 +2,25 @@ import Box from '@mui/material/Box'
 import Column from './Column/Column'
 import { Button } from '@mui/material'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import CloseIcon from '@mui/icons-material/Close'
-import TextField from '@mui/material/TextField';
+import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-const ListColumns = ({ columns }) => {
+const ListColumns = ({ columns, createNewColumn, createNewCard }) => {
   const [newColumnForm, setNewColumnForm] = useState(false)
   const [valueColumnTitle, setValueColumnTitle] = useState('')
   const toggleNewColumnForm = () => setNewColumnForm(!newColumnForm)
-  const addNewCoulmn = () => {
+  const addNewCoulmn = async() => {
     if (!valueColumnTitle) {
       toast.error('Please insert a title for the new column')
       return
     }
-
+    //tao du lieu de call api
+    const newColumnData = {
+      title: valueColumnTitle
+    }
+    await createNewColumn(newColumnData)
     // dong trang thai them column va claer input
     toggleNewColumnForm()
     setValueColumnTitle('')
@@ -33,7 +37,7 @@ const ListColumns = ({ columns }) => {
         '&::-webkit-scrollbar-track':{ margin:2 }
       }}>
         {/* Box column test 01*/}
-        {columns?.map((column) => (<Column key={column?._id} column={column} />))}
+        {columns?.map((column) => (<Column createNewCard = {createNewCard} columnId = {column._id} key={column?._id} column={column} />))}
         {/* Box add new column CTA */}
         {!newColumnForm ?
           <Box

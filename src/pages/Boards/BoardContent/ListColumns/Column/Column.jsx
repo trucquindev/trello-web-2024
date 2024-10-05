@@ -24,7 +24,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import TextField from '@mui/material/TextField'
 import { toast } from 'react-toastify'
 
-const Column = ({ column }) => {
+const Column = ({ column, createNewCard, columnId }) => {
   //kéo thả
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: column._id,
@@ -50,14 +50,18 @@ const Column = ({ column }) => {
   const [newCardForm, setNewCardForm] = useState(false)
   const [valueCardTitle, setValueCardTitle] = useState('')
   const toggleNewCardForm = () => setNewCardForm(!newCardForm)
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!valueCardTitle) {
       toast.error('Please insert a title for the new Card', {
         position: 'bottom-right'
       })
       return
     }
-
+    const newCardData = {
+      title: valueCardTitle,
+      columnId: columnId
+    }
+    await createNewCard(newCardData)
     // dong trang thai them Card va claer input
     toggleNewCardForm()
     setValueCardTitle('')
