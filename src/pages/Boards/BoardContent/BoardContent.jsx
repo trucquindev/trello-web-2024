@@ -13,7 +13,7 @@ import Column from './ListColumns/Column/Column'
 import { pointerWithin } from '@dnd-kit/core'
 import { cloneDeep, isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/untils/formatters'
-const BoardContent = ({ board }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
   // yêu cầu chuột di chuyển 10px mới bắt sự kiện
@@ -261,7 +261,7 @@ const BoardContent = ({ board }) => {
         height:(theme) => theme.trello.boardContentHeight,
         p:'10px 0',
       } }>
-        <ListColumns columns={orderedColumns}/>
+        <ListColumns columns={orderedColumns} createNewColumn= {createNewColumn} createNewCard= {createNewCard}/>
         <DragOverlay dropAnimation={dropAnimation}>
           {!!activeDragItemData?.columnId && null}
           {activeDragItemData?.columnId ===undefined ? <Column column={activeDragItemData}/> : <Card card={activeDragItemData}/>}
