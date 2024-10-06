@@ -1,7 +1,6 @@
 /* eslint-disable no-extra-boolean-cast */
 import Box from '@mui/material/Box'
 import ListColumns from './ListColumns/ListColumns'
-import { mapOder } from '~/untils/sort'
 import { DndContext, useSensor, useSensors,
   // MouseSensor, TouchSensor,
   DragOverlay, defaultDropAnimationSideEffects, closestCorners, getFirstCollision } from '@dnd-kit/core'
@@ -13,7 +12,7 @@ import Column from './ListColumns/Column/Column'
 import { pointerWithin } from '@dnd-kit/core'
 import { cloneDeep, isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/untils/formatters'
-const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) => {
+const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, moveCardInTheSameColumn }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
   // yêu cầu chuột di chuyển 10px mới bắt sự kiện
@@ -34,7 +33,8 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
   const lastOverID = useRef(null)
 
   useEffect(() => {
-    setOrderedColumns(mapOder(board?.columns, board?.columnOrderIds, '_id'))
+    // column da duoc sap xep o combonent cao nhat
+    setOrderedColumns(board?.columns)
   }, [board])
 
   // tìm một cái column theo cardId
@@ -158,6 +158,7 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
 
       //Laấy dữ liệu khi start để so sánh
       if (oldColumnWhenDragginCard._id!== overColumn._id) {
+        //keo tha card trong 2 column khac nhau
         moveCardBetweenColumns(
           overColumn,
           overCardId,
@@ -167,10 +168,13 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
           activeDraggingCardId,
           activeDraggingCardData)
       } else {
+        // keo tha card trong 1 column
         const oldCardIndex=oldColumnWhenDragginCard?.cards?.findIndex(c => c._id === activeDragItemId) // laays vi tri cu tu oldColumnWhenDragginCard
         const newCardIndex=overColumn?.cards?.findIndex(c => c._id === overCardId )
         //dung arraymove để sắp xếp dữ liệu sau khi drag
         const dndOrderedCard= arrayMove(oldColumnWhenDragginCard?.cards, oldCardIndex, newCardIndex) // laays vi tri moi tu oldColumnWhenDragginCard
+        const dndOrderedCardIds = dndOrderedCard.map(c => c._id)
+        // cap nhat kgi create column
         setOrderedColumns(prev => {
           // clone mảng cũ sang 1 cái mảng mới để xử lí data r set return
           const nextColumns = cloneDeep(prev)
@@ -179,10 +183,12 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
           const targetColumn = nextColumns.find(c => c._id === overColumn._id)
 
           targetColumn.cards= dndOrderedCard
-          targetColumn.cardOrderIds= dndOrderedCard.map(c => c._id)
+          targetColumn.cardOrderIds= dndOrderedCardIds
 
           return nextColumns
         })
+        // gọi api update drag column
+        moveCardInTheSameColumn(dndOrderedCard, dndOrderedCardIds, oldColumnWhenDragginCard._id)
       }
     }
     //XỬ LÍ KÉO THẢ COLUMN
@@ -194,11 +200,10 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns }) =>
         //dung arraymove để sắp xếp dữ liệu sau khi drag
         const dndOrderedColumns= arrayMove(orderedColumns, oldColumnIndex, newColumnIndex);
 
-        // gọi api update drag column
-        moveColumns(dndOrderedColumns)
-
         // cập nhật lại state columns sau khi đã kéo thả van dung cai nay sau khi call api de giao dien muot ma
         setOrderedColumns(dndOrderedColumns)
+        // gọi api update drag column
+        moveColumns(dndOrderedColumns)
       }
     }
 

@@ -1,10 +1,14 @@
+import { Box } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import { Container } from '@mui/material'
 import AppBar from '~/Combonents/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-import { createNewColumnAPI, createNewCardAPI, updateBoardDetailsApi } from '~/apis'
+import { createNewColumnAPI, createNewCardAPI, updateBoardDetailsApi, updateColumnDetailsApi } from '~/apis'
+import { mapOder } from '~/untils/sort'
 import { generatePlaceholderCard } from '~/untils/formatters'
 import { isEmpty } from 'lodash'
+import CircularProgress from '@mui/material/CircularProgress';
 // import { mockData } from '~/apis/mock-data'
 import { useState, useEffect } from 'react'
 import { fetchBoardDetailsApi } from '~/apis'
@@ -15,11 +19,17 @@ const Board = () => {
     const boardId ='66fae02074e6f32c05f5201f'
     fetchBoardDetailsApi(boardId)
       .then(board => {
-        // khi refesh trang web check column rong de them placeHolderCard
+        // sap xep thu tu cac column o day truoc khi dua du lieu xuong ben duoi cac component
+        board.columns = mapOder(board?.columns, board?.columnOrderIds, '_id')
         board.columns.forEach(column => {
+        // khi refesh trang web check column rong de them placeHolderCard
           if (isEmpty(column.cards)) {
             column.cards = [generatePlaceholderCard(column)]
             column.cardOrderIds = [generatePlaceholderCard(column)._id]
+          }
+          else {
+            // sap xep card theo orderIds truoc khi dua xuong
+            column.cards = mapOder(column.cards, column.cardOrderIds, '_id')
           }
         })
         setBoard(board)
@@ -54,7 +64,7 @@ const Board = () => {
   }
 
   // xử lí kéo thả column and update API
-  const moveColumns = async(dndOrderedColumns) => {
+  const moveColumns = (dndOrderedColumns) => {
     //update dữ liệu board
     const dndOrderedColumnsIds= dndOrderedColumns.map(c => c._id)
     const newBoard = { ...board }
@@ -63,9 +73,30 @@ const Board = () => {
     setBoard(newBoard)
 
     //goi api update
-    await updateBoardDetailsApi(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
+    updateBoardDetailsApi(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
     return
   }
+
+  // goi api update mang cardOderIds cua column chua no (thay doi vi tri trong mang)
+  const moveCardInTheSameColumn = (dndOrderedCard, dndOrderedCardIds, columnId) => {
+    //update dữ liệu board
+    const newBoard = { ...board }
+    const columnToUpdate = newBoard.columns.find(column => column._id === columnId)
+    if (columnToUpdate) {
+      columnToUpdate.cards= dndOrderedCard
+      columnToUpdate.cardOrderIds = dndOrderedCardIds
+    }
+    setBoard(newBoard)
+    //goi api update
+    updateColumnDetailsApi(columnId, { cardOrderIds: dndOrderedCardIds })
+  }
+  if (!board)
+    return (
+      <Box sx={{ width:'100vw', height:'100vh', display: 'flex', flexDirection:'column', gap:2, alignItems: 'center', justifyContent:'center' }}>
+        <CircularProgress size="5rem" color='secondary'/>
+        <Typography variant="h5">Loading board...</Typography>
+      </Box>
+    )
   return (
     <Container disableGutters maxWidth={false} sx={ { height:'100vh' } }>
       <AppBar/>
@@ -73,7 +104,8 @@ const Board = () => {
       <BoardContent board={board}
         createNewColumn = {createNewColumn}
         createNewCard = {createNewCard}
-        moveColumns= {moveColumns}/>
+        moveColumns= {moveColumns}
+        moveCardInTheSameColumn= {moveCardInTheSameColumn}/>
     </Container>
   )
 }

@@ -13,9 +13,16 @@ export const updateBoardDetailsApi= async(boardId, updateData) => {
   const response = await axios.put(`${API_ROOT}/v1/boards/${boardId}`, updateData)
   return response.data
 }
+
 //columnApi
 export const createNewColumnAPI= async(dataColumn) => {
   const response = await axios.post(`${API_ROOT}/v1/columns/`, dataColumn)
+  return response.data
+}
+
+//updatColumn
+export const updateColumnDetailsApi= async(columnId, updateData) => {
+  const response = await axios.put(`${API_ROOT}/v1/columns/${columnId}`, updateData)
   return response.data
 }
 
