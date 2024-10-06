@@ -17,7 +17,6 @@ import AddCardIcon from '@mui/icons-material/AddCard'
 import { Button } from '@mui/material'
 import DragHandleIcon from '@mui/icons-material/DragHandle'
 import ListCards from './ListCards/ListCards'
-import { mapOder } from '~/untils/sort'
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import CloseIcon from '@mui/icons-material/Close'
@@ -45,12 +44,12 @@ const Column = ({ column, createNewCard, columnId }) => {
     setAnchorEl(null)
   };
   //sắp xếp card
-  const orderedCards= mapOder(column?.cards, column?.cardOrderIds, '_id')
+  const orderedCards= column?.cards
 
   const [newCardForm, setNewCardForm] = useState(false)
   const [valueCardTitle, setValueCardTitle] = useState('')
   const toggleNewCardForm = () => setNewCardForm(!newCardForm)
-  const addNewCard = async () => {
+  const addNewCard = () => {
     if (!valueCardTitle) {
       toast.error('Please insert a title for the new Card', {
         position: 'bottom-right'
@@ -61,7 +60,7 @@ const Column = ({ column, createNewCard, columnId }) => {
       title: valueCardTitle,
       columnId: columnId
     }
-    await createNewCard(newCardData)
+    createNewCard(newCardData)
     // dong trang thai them Card va claer input
     toggleNewCardForm()
     setValueCardTitle('')
