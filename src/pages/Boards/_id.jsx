@@ -4,7 +4,7 @@ import { Container } from '@mui/material'
 import AppBar from '~/Combonents/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-import { createNewColumnAPI, createNewCardAPI, updateBoardDetailsApi, updateColumnDetailsApi } from '~/apis'
+import { createNewColumnAPI, createNewCardAPI, updateBoardDetailsApi, updateColumnDetailsApi, moveCardDifferentColumnAPI } from '~/apis'
 import { mapOder } from '~/untils/sort'
 import { generatePlaceholderCard } from '~/untils/formatters'
 import { isEmpty } from 'lodash'
@@ -90,9 +90,39 @@ const Board = () => {
     //goi api update
     updateColumnDetailsApi(columnId, { cardOrderIds: dndOrderedCardIds })
   }
+  //cap nhat cardOrderIds trong column ban dau
+  //cap nhat cardOrderIds trong column moi
+  //cap nhat columnId cua card duoc them vao column moi
+  //currentCardId card ban dau
+  const moveCardToDifferentColumn = (currentCardId, prevColumnId, nexColumnId, dndOrderedColumns) => {
+    //update dữ liệu board
+    const dndOrderedColumnsIds= dndOrderedColumns.map(c => c._id)
+    const newBoard = { ...board }
+    newBoard.columns= dndOrderedColumns
+    newBoard.columnOrderIds= dndOrderedColumnsIds
+    setBoard(newBoard)
+
+    //call api
+    moveCardDifferentColumnAPI({
+      currentCardId,
+      prevColumnId,
+      prevCardOrderIds:dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+      nexColumnId,
+      nexCardOrderIds:dndOrderedColumns.find(c => c._id === nexColumnId)?.cardOrderIds,
+    })
+  }
+
+  // khi chua load duoc board
   if (!board)
     return (
-      <Box sx={{ width:'100vw', height:'100vh', display: 'flex', flexDirection:'column', gap:2, alignItems: 'center', justifyContent:'center' }}>
+      <Box sx={{ width:'100vw',
+        height:'100vh',
+        display: 'flex',
+        flexDirection:'column',
+        gap:2,
+        alignItems: 'center',
+        justifyContent:'center'
+      }}>
         <CircularProgress size="5rem" color='secondary'/>
         <Typography variant="h5">Loading board...</Typography>
       </Box>
@@ -105,7 +135,8 @@ const Board = () => {
         createNewColumn = {createNewColumn}
         createNewCard = {createNewCard}
         moveColumns= {moveColumns}
-        moveCardInTheSameColumn= {moveCardInTheSameColumn}/>
+        moveCardInTheSameColumn= {moveCardInTheSameColumn}
+        moveCardToDifferentColumn= {moveCardToDifferentColumn}/>
     </Container>
   )
 }

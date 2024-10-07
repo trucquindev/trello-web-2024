@@ -12,7 +12,13 @@ import Column from './ListColumns/Column/Column'
 import { pointerWithin } from '@dnd-kit/core'
 import { cloneDeep, isEmpty } from 'lodash'
 import { generatePlaceholderCard } from '~/untils/formatters'
-const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, moveCardInTheSameColumn }) => {
+const BoardContent = ({ board,
+  createNewColumn,
+  createNewCard,
+  moveColumns,
+  moveCardInTheSameColumn,
+  moveCardToDifferentColumn
+}) => {
   //https://docs.dndkit.com/api-documentation/sensors
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
   // yêu cầu chuột di chuyển 10px mới bắt sự kiện
@@ -43,15 +49,16 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
     return orderedColumns.find(column => column?.cards?.map(card => card._id)?.includes(cardId))
   }
   // function chung xử lí sự kiện kéo card giữa 2 column khác nhau và phải có trong cả handle over và end
-  function moveCardBetweenColumns (
+  const moveCardBetweenColumns = (
     overColumn,
     overCardId,
     active,
     over,
     activeColumn,
     activeDraggingCardId,
-    activeDraggingCardData
-  ) {
+    activeDraggingCardData,
+    triggerFrom
+  ) => {
     // cập nhật lại state columns sau khi đã kéo thả
     setOrderedColumns(prev => {
       //tìm vị trí của overCard trong column đích( noi card được thả)
@@ -95,6 +102,15 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
         // cập nhật lại dữ liệu mảng cardOrderIds cho chuẩn
         nextOverColumn.cardOrderIds = nextOverColumn.cards.map(card => card._id)
       }
+      //neu functuon nay duoc goi o handleDragEnd thi nghia la da keo tha xong co the goi api
+
+      if (triggerFrom === 'handleDragEnd') {
+        moveCardToDifferentColumn(
+          activeDraggingCardId,
+          oldColumnWhenDragginCard._id,
+          nextOverColumn._id,
+          nextColumns)
+      }
       return nextColumns
     })
   }
@@ -136,7 +152,9 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
         over,
         activeColumn,
         activeDraggingCardId,
-        activeDraggingCardData)
+        activeDraggingCardData,
+        'handleDragOver'
+      )
     }
   }
 
@@ -166,7 +184,9 @@ const BoardContent = ({ board, createNewColumn, createNewCard, moveColumns, move
           over,
           activeColumn,
           activeDraggingCardId,
-          activeDraggingCardData)
+          activeDraggingCardData,
+          'handleDragEnd'
+        )
       } else {
         // keo tha card trong 1 column
         const oldCardIndex=oldColumnWhenDragginCard?.cards?.findIndex(c => c._id === activeDragItemId) // laays vi tri cu tu oldColumnWhenDragginCard
