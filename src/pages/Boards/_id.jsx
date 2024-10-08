@@ -4,7 +4,7 @@ import { Container } from '@mui/material'
 import AppBar from '~/Combonents/AppBar/AppBar'
 import BoardBar from './BoardBar/BoardBar'
 import BoardContent from './BoardContent/BoardContent'
-import { createNewColumnAPI, createNewCardAPI, updateBoardDetailsApi, updateColumnDetailsApi, moveCardDifferentColumnAPI } from '~/apis'
+import { createNewColumnAPI, createNewCardAPI, updateBoardDetailsApi, updateColumnDetailsApi, moveCardDifferentColumnAPI, deleteColumnAPI } from '~/apis'
 import { mapOder } from '~/untils/sort'
 import { generatePlaceholderCard } from '~/untils/formatters'
 import { isEmpty } from 'lodash'
@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 // import { mockData } from '~/apis/mock-data'
 import { useState, useEffect } from 'react'
 import { fetchBoardDetailsApi } from '~/apis'
+import { toast } from 'react-toastify'
 const Board = () => {
   const [board, setBoard] = useState(null)
   useEffect(() => {
@@ -49,7 +50,6 @@ const Board = () => {
     setBoard(newBoard)
     return
   }
-
   //function call api create card
   const createNewCard = async(newCardData) => {
     const createdCard= await createNewCardAPI({ ...newCardData, boardId: board._id })
@@ -62,6 +62,7 @@ const Board = () => {
     setBoard(newBoard)
     return
   }
+  // function xoa card
 
   // xử lí kéo thả column and update API
   const moveColumns = (dndOrderedColumns) => {
@@ -80,7 +81,6 @@ const Board = () => {
   // goi api update mang cardOderIds cua column chua no (thay doi vi tri trong mang)
   const moveCardInTheSameColumn = (dndOrderedCard, dndOrderedCardIds, columnId) => {
     if (dndOrderedCardIds[0].includes('placeholder-card')) dndOrderedCardIds.shift()
-    console.log('🚀 ~ moveCardInTheSameColumn ~ dndOrderedCardIds:', dndOrderedCardIds)
     //update dữ liệu board
     const newBoard = { ...board }
     const columnToUpdate = newBoard.columns.find(column => column._id === columnId)
@@ -116,6 +116,20 @@ const Board = () => {
       nexCardOrderIds:dndOrderedColumns.find(c => c._id === nexColumnId)?.cardOrderIds,
     })
   }
+  //function call api delete column
+  const deleteColumn = async(columnId) => {
+    // goi api xu li delete
+    deleteColumnAPI(columnId).then((res) => {
+      toast.success(res?.deleteResult)
+      if (res.err===0) {
+        //update dữ liệu board
+        const newBoard = { ...board }
+        newBoard.columns= newBoard.columns.filter(c => c._id !== columnId)
+        newBoard.columnOrderIds= newBoard.columnOrderIds.filter(_id => _id !== columnId)
+        setBoard(newBoard)
+      }
+    })
+  }
 
   // khi chua load duoc board
   if (!board)
@@ -141,7 +155,8 @@ const Board = () => {
         createNewCard = {createNewCard}
         moveColumns= {moveColumns}
         moveCardInTheSameColumn= {moveCardInTheSameColumn}
-        moveCardToDifferentColumn= {moveCardToDifferentColumn}/>
+        moveCardToDifferentColumn= {moveCardToDifferentColumn}
+        deleteColumn= {deleteColumn}/>
     </Container>
   )
 }

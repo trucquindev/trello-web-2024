@@ -17,7 +17,8 @@ const BoardContent = ({ board,
   createNewCard,
   moveColumns,
   moveCardInTheSameColumn,
-  moveCardToDifferentColumn
+  moveCardToDifferentColumn,
+  deleteColumn
 }) => {
   //https://docs.dndkit.com/api-documentation/sensors
   // const pointerSensor = useSensor(PointerSensor, { activationConstraint:{ distance:10 } })
@@ -285,7 +286,7 @@ const BoardContent = ({ board,
         height:(theme) => theme.trello.boardContentHeight,
         p:'10px 0',
       } }>
-        <ListColumns columns={orderedColumns} createNewColumn= {createNewColumn} createNewCard= {createNewCard}/>
+        <ListColumns columns={orderedColumns} createNewColumn= {createNewColumn} createNewCard= {createNewCard} deleteColumn={deleteColumn}/>
         <DragOverlay dropAnimation={dropAnimation}>
           {!!activeDragItemData?.columnId && null}
           {activeDragItemData?.columnId ===undefined ? <Column column={activeDragItemData}/> : <Card card={activeDragItemData}/>}
