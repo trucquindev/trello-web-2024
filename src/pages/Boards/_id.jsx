@@ -79,6 +79,8 @@ const Board = () => {
 
   // goi api update mang cardOderIds cua column chua no (thay doi vi tri trong mang)
   const moveCardInTheSameColumn = (dndOrderedCard, dndOrderedCardIds, columnId) => {
+    if (dndOrderedCardIds[0].includes('placeholder-card')) dndOrderedCardIds.shift()
+    console.log('🚀 ~ moveCardInTheSameColumn ~ dndOrderedCardIds:', dndOrderedCardIds)
     //update dữ liệu board
     const newBoard = { ...board }
     const columnToUpdate = newBoard.columns.find(column => column._id === columnId)
@@ -103,10 +105,13 @@ const Board = () => {
     setBoard(newBoard)
 
     //call api
+    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    // xu li van de khi keo card cuoi cung ra khoi column, la con cai placeholder en xoa no di
+    if (prevCardOrderIds[0].includes('placeholder-card')) prevCardOrderIds = []
     moveCardDifferentColumnAPI({
       currentCardId,
       prevColumnId,
-      prevCardOrderIds:dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds,
+      prevCardOrderIds,
       nexColumnId,
       nexCardOrderIds:dndOrderedColumns.find(c => c._id === nexColumnId)?.cardOrderIds,
     })
