@@ -64,7 +64,7 @@ export const activeBoardSlice = createSlice({
 });
 
 // Actions : là nơi dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
-export const { updateCurrentActiveBoard, extraReducers } = activeBoardSlice.actions;
+export const { updateCurrentActiveBoard } = activeBoardSlice.actions;
 
 // Selectors: là nơi dành cho các components bên dưới gọi bằng hooks useSelectỏ () để lấy dữ liệu tử kho redux ra xử dụng
 export const selectCurrentActiveBoard = (state) => {
