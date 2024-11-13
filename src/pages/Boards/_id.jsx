@@ -1,164 +1,201 @@
-import { Box } from '@mui/material'
-import Typography from '@mui/material/Typography'
-import { Container } from '@mui/material'
-import AppBar from '~/Combonents/AppBar/AppBar'
-import BoardBar from './BoardBar/BoardBar'
-import BoardContent from './BoardContent/BoardContent'
-import { createNewColumnAPI, createNewCardAPI, updateBoardDetailsApi, updateColumnDetailsApi, moveCardDifferentColumnAPI, deleteColumnAPI } from '~/apis'
-import { mapOder } from '~/untils/sort'
-import { generatePlaceholderCard } from '~/untils/formatters'
-import { isEmpty } from 'lodash'
+import { Box } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { Container } from '@mui/material';
+import AppBar from '~/Combonents/AppBar/AppBar';
+import BoardBar from './BoardBar/BoardBar';
+import BoardContent from './BoardContent/BoardContent';
+import {
+  createNewColumnAPI,
+  createNewCardAPI,
+  updateBoardDetailsApi,
+  updateColumnDetailsApi,
+  moveCardDifferentColumnAPI,
+  deleteColumnAPI,
+} from '~/apis';
+import { mapOder } from '~/untils/sort';
+import { generatePlaceholderCard } from '~/untils/formatters';
+import { isEmpty } from 'lodash';
 import CircularProgress from '@mui/material/CircularProgress';
 // import { mockData } from '~/apis/mock-data'
-import { useState, useEffect } from 'react'
-import { fetchBoardDetailsApi } from '~/apis'
-import { toast } from 'react-toastify'
+import { useState, useEffect } from 'react';
+import { fetchBoardDetailsApi } from '~/apis';
+import { toast } from 'react-toastify';
 const Board = () => {
-  const [board, setBoard] = useState(null)
+  const [board, setBoard] = useState(null);
   useEffect(() => {
     // goi api
-    const boardId ='66fae02074e6f32c05f5201f'
-    fetchBoardDetailsApi(boardId)
-      .then(board => {
-        // sap xep thu tu cac column o day truoc khi dua du lieu xuong ben duoi cac component
-        board.columns = mapOder(board?.columns, board?.columnOrderIds, '_id')
-        board.columns.forEach(column => {
+    const boardId = '66fae02074e6f32c05f5201f';
+    fetchBoardDetailsApi(boardId).then((board) => {
+      // sap xep thu tu cac column o day truoc khi dua du lieu xuong ben duoi cac component
+      board.columns = mapOder(board?.columns, board?.columnOrderIds, '_id');
+      board.columns.forEach((column) => {
         // khi refesh trang web check column rong de them placeHolderCard
-          if (isEmpty(column.cards)) {
-            column.cards = [generatePlaceholderCard(column)]
-            column.cardOrderIds = [generatePlaceholderCard(column)._id]
-          }
-          else {
-            // sap xep card theo orderIds truoc khi dua xuong
-            column.cards = mapOder(column.cards, column.cardOrderIds, '_id')
-          }
-        })
-        setBoard(board)
-      })
-  }, [])
+        if (isEmpty(column.cards)) {
+          column.cards = [generatePlaceholderCard(column)];
+          column.cardOrderIds = [generatePlaceholderCard(column)._id];
+        } else {
+          // sap xep card theo orderIds truoc khi dua xuong
+          column.cards = mapOder(column.cards, column.cardOrderIds, '_id');
+        }
+      });
+      setBoard(board);
+    });
+  }, []);
   //function call api create column
-  const createNewColumn = async(newColumnData) => {
-    const createdColumn= await createNewColumnAPI({ ...newColumnData, boardId: board._id })
+  const createNewColumn = async (newColumnData) => {
+    const createdColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id,
+    });
     // tao 1 column rong de keo tha
-    createdColumn.cards = [generatePlaceholderCard(createdColumn)]
-    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id]
+    createdColumn.cards = [generatePlaceholderCard(createdColumn)];
+    createdColumn.cardOrderIds = [generatePlaceholderCard(createdColumn)._id];
 
     //cap nhat state board
-    const newBoard = { ...board }
-    newBoard.columns.push(createdColumn)
-    newBoard.columnOrderIds.push(createdColumn._id)
-    setBoard(newBoard)
-    return
-  }
+    const newBoard = { ...board };
+    newBoard.columns.push(createdColumn);
+    newBoard.columnOrderIds.push(createdColumn._id);
+    setBoard(newBoard);
+    return;
+  };
   //function call api create card
-  const createNewCard = async(newCardData) => {
-    const createdCard= await createNewCardAPI({ ...newCardData, boardId: board._id })
-    const newBoard = { ...board }
-    const columnToUpdate = newBoard.columns.find(column => column._id === createdCard.columnId)
+  const createNewCard = async (newCardData) => {
+    const createdCard = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id,
+    });
+    const newBoard = { ...board };
+    const columnToUpdate = newBoard.columns.find(
+      (column) => column._id === createdCard.columnId
+    );
     if (columnToUpdate) {
-      columnToUpdate.cards.push(createdCard)
-      columnToUpdate.cardOrderIds.push(createdCard._id)
+      columnToUpdate.cards.push(createdCard);
+      columnToUpdate.cardOrderIds.push(createdCard._id);
     }
-    setBoard(newBoard)
-    return
-  }
+    setBoard(newBoard);
+    return;
+  };
   // function xoa card
 
   // xử lí kéo thả column and update API
   const moveColumns = (dndOrderedColumns) => {
     //update dữ liệu board
-    const dndOrderedColumnsIds= dndOrderedColumns.map(c => c._id)
-    const newBoard = { ...board }
-    newBoard.columns= dndOrderedColumns
-    newBoard.columnOrderIds= dndOrderedColumnsIds
-    setBoard(newBoard)
+    const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
+    const newBoard = { ...board };
+    newBoard.columns = dndOrderedColumns;
+    newBoard.columnOrderIds = dndOrderedColumnsIds;
+    setBoard(newBoard);
 
     //goi api update
-    updateBoardDetailsApi(newBoard._id, { columnOrderIds: newBoard.columnOrderIds })
-    return
-  }
+    updateBoardDetailsApi(newBoard._id, {
+      columnOrderIds: newBoard.columnOrderIds,
+    });
+    return;
+  };
 
   // goi api update mang cardOderIds cua column chua no (thay doi vi tri trong mang)
-  const moveCardInTheSameColumn = (dndOrderedCard, dndOrderedCardIds, columnId) => {
-    if (dndOrderedCardIds[0].includes('placeholder-card')) dndOrderedCardIds.shift()
+  const moveCardInTheSameColumn = (
+    dndOrderedCard,
+    dndOrderedCardIds,
+    columnId
+  ) => {
+    if (dndOrderedCardIds[0].includes('placeholder-card'))
+      dndOrderedCardIds.shift();
     //update dữ liệu board
-    const newBoard = { ...board }
-    const columnToUpdate = newBoard.columns.find(column => column._id === columnId)
+    const newBoard = { ...board };
+    const columnToUpdate = newBoard.columns.find(
+      (column) => column._id === columnId
+    );
     if (columnToUpdate) {
-      columnToUpdate.cards= dndOrderedCard
-      columnToUpdate.cardOrderIds = dndOrderedCardIds
+      columnToUpdate.cards = dndOrderedCard;
+      columnToUpdate.cardOrderIds = dndOrderedCardIds;
     }
-    setBoard(newBoard)
+    setBoard(newBoard);
     //goi api update
-    updateColumnDetailsApi(columnId, { cardOrderIds: dndOrderedCardIds })
-  }
+    updateColumnDetailsApi(columnId, { cardOrderIds: dndOrderedCardIds });
+  };
   //cap nhat cardOrderIds trong column ban dau
   //cap nhat cardOrderIds trong column moi
   //cap nhat columnId cua card duoc them vao column moi
   //currentCardId card ban dau
-  const moveCardToDifferentColumn = (currentCardId, prevColumnId, nexColumnId, dndOrderedColumns) => {
+  const moveCardToDifferentColumn = (
+    currentCardId,
+    prevColumnId,
+    nexColumnId,
+    dndOrderedColumns
+  ) => {
     //update dữ liệu board
-    const dndOrderedColumnsIds= dndOrderedColumns.map(c => c._id)
-    const newBoard = { ...board }
-    newBoard.columns= dndOrderedColumns
-    newBoard.columnOrderIds= dndOrderedColumnsIds
-    setBoard(newBoard)
+    const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
+    const newBoard = { ...board };
+    newBoard.columns = dndOrderedColumns;
+    newBoard.columnOrderIds = dndOrderedColumnsIds;
+    setBoard(newBoard);
 
     //call api
-    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    let prevCardOrderIds = dndOrderedColumns.find(
+      (c) => c._id === prevColumnId
+    )?.cardOrderIds;
     // xu li van de khi keo card cuoi cung ra khoi column, la con cai placeholder en xoa no di
-    if (prevCardOrderIds[0].includes('placeholder-card')) prevCardOrderIds = []
+    if (prevCardOrderIds[0].includes('placeholder-card')) prevCardOrderIds = [];
     moveCardDifferentColumnAPI({
       currentCardId,
       prevColumnId,
       prevCardOrderIds,
       nexColumnId,
-      nexCardOrderIds:dndOrderedColumns.find(c => c._id === nexColumnId)?.cardOrderIds,
-    })
-  }
+      nexCardOrderIds: dndOrderedColumns.find((c) => c._id === nexColumnId)
+        ?.cardOrderIds,
+    });
+  };
   //function call api delete column
-  const deleteColumn = async(columnId) => {
+  const deleteColumn = async (columnId) => {
     // goi api xu li delete
     deleteColumnAPI(columnId).then((res) => {
-      toast.success(res?.deleteResult)
-      if (res.err===0) {
+      toast.success(res?.deleteResult);
+      if (res.err === 0) {
         //update dữ liệu board
-        const newBoard = { ...board }
-        newBoard.columns= newBoard.columns.filter(c => c._id !== columnId)
-        newBoard.columnOrderIds= newBoard.columnOrderIds.filter(_id => _id !== columnId)
-        setBoard(newBoard)
+        const newBoard = { ...board };
+        newBoard.columns = newBoard.columns.filter((c) => c._id !== columnId);
+        newBoard.columnOrderIds = newBoard.columnOrderIds.filter(
+          (_id) => _id !== columnId
+        );
+        setBoard(newBoard);
       }
-    })
-  }
+    });
+  };
 
   // khi chua load duoc board
   if (!board)
     return (
-      <Box sx={{ width:'100vw',
-        height:'100vh',
-        display: 'flex',
-        flexDirection:'column',
-        gap:2,
-        alignItems: 'center',
-        justifyContent:'center'
-      }}>
-        <CircularProgress size="5rem" color='secondary'/>
+      <Box
+        sx={{
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress size="5rem" color="secondary" />
         <Typography variant="h5">Loading board...</Typography>
       </Box>
-    )
+    );
   return (
-    <Container disableGutters maxWidth={false} sx={ { height:'100vh' } }>
-      <AppBar/>
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
+      <AppBar />
       <BoardBar board={board} />
-      <BoardContent board={board}
-        createNewColumn = {createNewColumn}
-        createNewCard = {createNewCard}
-        moveColumns= {moveColumns}
-        moveCardInTheSameColumn= {moveCardInTheSameColumn}
-        moveCardToDifferentColumn= {moveCardToDifferentColumn}
-        deleteColumn= {deleteColumn}/>
+      <BoardContent
+        board={board}
+        createNewColumn={createNewColumn}
+        createNewCard={createNewCard}
+        moveColumns={moveColumns}
+        moveCardInTheSameColumn={moveCardInTheSameColumn}
+        moveCardToDifferentColumn={moveCardToDifferentColumn}
+        deleteColumn={deleteColumn}
+      />
     </Container>
-  )
-}
+  );
+};
 
-export default Board
+export default Board;
