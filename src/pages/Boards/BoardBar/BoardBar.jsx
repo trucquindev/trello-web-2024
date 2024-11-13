@@ -67,9 +67,9 @@ const BoardBar = ({ board }) => {
         >
             Invite
         </Button>
-        <AvatarGroup max={6}
+        <AvatarGroup max={4}
           sx={{
-            gap:'10px',
+            gap:'5px',
             '& .MuiAvatar-root': {
               width:34,
               height:34,
