@@ -15,16 +15,17 @@ import { useEffect } from 'react';
 import { fetchBoardDetailsApi, updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash'
+import { useParams } from 'react-router-dom';
 const Board = () => {
   const dispatch = useDispatch();
-
   // const [board, setBoard] = useState(null);
   const board = useSelector(selectCurrentActiveBoard)
+  const { boardId } = useParams()
   useEffect(() => {
-    const boardId = '66fae02074e6f32c05f5201f';
+    // const boardId = '66fae02074e6f32c05f5201f';
     // goi api
     dispatch(fetchBoardDetailsApi(boardId))
-  }, [dispatch]);
+  }, [dispatch, boardId]);
   // function xoa card
 
   // xử lí kéo thả column and update API
