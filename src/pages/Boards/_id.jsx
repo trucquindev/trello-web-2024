@@ -12,7 +12,7 @@ import { fetchBoardDetailsApi, updateCurrentActiveBoard, selectCurrentActiveBoar
 import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash'
 import { useParams } from 'react-router-dom';
-import PageLoadingSpiner from '~/Combonents/Loading/pageLoadingSpiner';
+import PageLoadingSpiner from '~/Combonents/Loading/PageLoadingSpiner';
 const Board = () => {
   const dispatch = useDispatch();
   // const [board, setBoard] = useState(null);

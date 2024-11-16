@@ -20,7 +20,7 @@ const AccountVerification = () => {
   // Neu url thieu token hoac email thi redirect sang trang 404
   if (!email || !token) return <Navigate to='/404' />
   // Neu verify chua xong thi redirect hien trang loading
-  if (verified) return <PageLoadingSpiner caption='Verifing your account ...' />
+  if (!verified) return <PageLoadingSpiner caption='Verifing your account ...' />
   // Neu verify thanh cong thi redirect sang trang login
 
   return (
