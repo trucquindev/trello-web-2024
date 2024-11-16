@@ -1,21 +1,18 @@
-import { Box } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
-import AppBar from '~/Combonents/AppBar/AppBar';
-import BoardBar from './BoardBar/BoardBar';
-import BoardContent from './BoardContent/BoardContent';
 import {
   updateBoardDetailsApi,
   updateColumnDetailsApi,
   moveCardDifferentColumnAPI
 } from '~/apis';
-import CircularProgress from '@mui/material/CircularProgress';
-// import { mockData } from '~/apis/mock-data'
+import AppBar from '~/Combonents/AppBar/AppBar';
+import BoardBar from './BoardBar/BoardBar';
+import BoardContent from './BoardContent/BoardContent';
 import { useEffect } from 'react';
 import { fetchBoardDetailsApi, updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash'
 import { useParams } from 'react-router-dom';
+import PageLoadingSpiner from '~/Combonents/Loading/pageLoadingSpiner';
 const Board = () => {
   const dispatch = useDispatch();
   // const [board, setBoard] = useState(null);
@@ -101,20 +98,7 @@ const Board = () => {
   // khi chua load duoc board
   if (!board)
     return (
-      <Box
-        sx={{
-          width: '100vw',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <CircularProgress size="5rem" color="secondary" />
-        <Typography variant="h5">Loading board...</Typography>
-      </Box>
+      <PageLoadingSpiner caption='Loading board ...' />
     );
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
