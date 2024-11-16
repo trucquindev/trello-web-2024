@@ -1,14 +1,6 @@
+import { toast } from 'react-toastify';
 import authorizedAxiosInstance from '~/untils/authorizeAxios';
 import { API_ROOT } from '~/untils/constrain';
-
-//boardApi
-// da them vao redux
-
-// export const fetchBoardDetailsApi= async(boardId) => {
-//   const response = await axios.get(`${API_ROOT}/v1/boards/${boardId}`)
-//   return response.data
-// }
-
 //updateBoard
 export const updateBoardDetailsApi = async (boardId, updateData) => {
   const response = await authorizedAxiosInstance.put(
@@ -56,6 +48,28 @@ export const createNewCardAPI = async (dataCard) => {
   const response = await authorizedAxiosInstance.post(
     `${API_ROOT}/v1/cards/`,
     dataCard
+  );
+  return response.data;
+};
+export const registerUserAPI = async (data) => {
+  const response = await authorizedAxiosInstance.post(
+    `${API_ROOT}/v1/users/register`,
+    data
+  );
+  toast.success(
+    'Account successfully registered!, Please check and verify your mail before logging in!',
+    { theme: 'colored' }
+  );
+  return response.data;
+};
+export const verifyUserAPI = async (data) => {
+  const response = await authorizedAxiosInstance.put(
+    `${API_ROOT}/v1/users/verify`,
+    data
+  );
+  toast.success(
+    'Account successfully verify!, Now you can login and enjoy our services! Have a good day!',
+    { theme: 'colored' }
   );
   return response.data;
 };
