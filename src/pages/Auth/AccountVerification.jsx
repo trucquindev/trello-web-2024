@@ -22,7 +22,6 @@ const AccountVerification = () => {
   // Neu verify chua xong thi redirect hien trang loading
   if (!verified) return <PageLoadingSpiner caption='Verifing your account ...' />
   // Neu verify thanh cong thi redirect sang trang login
-
   return (
     <Navigate to={`/login?verifiedEmail=${email}`} />
   )
