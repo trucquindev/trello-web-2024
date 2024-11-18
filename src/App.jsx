@@ -14,7 +14,7 @@ function App() {
       <Route path='/boards/:boardId' element={<Board />} />
       <Route path='/login' element={<Auth />} />
       <Route path='/register' element={<Auth />} />
-      <Route path='/account/verification' element={<AccountVerification />} />
+      <Route path='/accounts/verification' element={<AccountVerification />} />
       <Route path='*' element={<NotFound />} />
     </Routes>
   )
