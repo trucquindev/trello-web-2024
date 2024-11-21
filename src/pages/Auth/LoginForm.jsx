@@ -18,7 +18,7 @@ import {
   PASSWORD_RULE,
   PASSWORD_RULE_MESSAGE,
 } from '~/untils/validators'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { loginUserAPI } from '~/redux/user/userSlice'
 import FieldErrorAlert from '~/Combonents/Form/FieldErrorAlert'
 import { toast } from 'react-toastify'
@@ -33,7 +33,6 @@ function LoginForm() {
     toast.promise(dispatch(loginUserAPI({ email, password })), {
       pending: 'Loggin in ...'
     }).then((res) => {
-      console.log('🚀 ~ toast.promise ~ res:', res)
       //ddoanj nay kiem tra k loi- login thanh cong thi moi redirect ve home
       if (!res.error) navigate('/')
     })

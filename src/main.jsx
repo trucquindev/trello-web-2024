@@ -13,8 +13,12 @@ import { ConfirmProvider } from 'material-ui-confirm'
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
+import { injectStore } from './untils/authorizeAxios.js'
 const persistor = persistStore(store)
 
+// kỹ thuật injectStore
+// Giai phap: Inject store : kỹ thuật cần khi sử dụng redux store ở các file ngoài phạm vi component nhu file authorization hien tai
+injectStore(store)
 ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter basename='/'>
     <Provider store={store}>
