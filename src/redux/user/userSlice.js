@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import authorizedAxiosInstance from '~/untils/authorizeAxios';
 import { API_ROOT } from '~/untils/constrain';
 const initialState = {
@@ -13,6 +14,19 @@ export const loginUserAPI = createAsyncThunk(
       `${API_ROOT}/v1/users/login`,
       data
     );
+    return response.data;
+  }
+);
+export const logoutUserAPI = createAsyncThunk(
+  'activeBoard/logoutUserAPI',
+  async (showSuccessMessage = true) => {
+    // Gọi API để lấy thông tin của board
+    const response = await authorizedAxiosInstance.delete(
+      `${API_ROOT}/v1/users/logout`
+    );
+    if (showSuccessMessage) {
+      toast.success('Đăng xuất thành công');
+    }
     return response.data;
   }
 );
@@ -34,6 +48,9 @@ export const userSlice = createSlice({
       //update dữ liệu của currentActiveBoard
 
       state.currentUser = user;
+    });
+    builder.addCase(logoutUserAPI.fulfilled, (state) => {
+      state.currentUser = null;
     });
   },
   // Thiết lập middleware cho thông tin mới nhất của board
