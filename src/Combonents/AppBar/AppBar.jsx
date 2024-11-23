@@ -23,6 +23,7 @@ import PostAddIcon from '@mui/icons-material/PostAdd'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
+import { Link } from 'react-router-dom'
 const AppBar = () => {
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = useState('')
@@ -30,65 +31,67 @@ const AppBar = () => {
     setOpen(newOpen);
   };
   const DrawerList = (
-    <Box sx={{ width: 200, bgcolor:'blue', height:'100%' }}>
+    <Box sx={{ width: 200, bgcolor: 'blue', height: '100%' }}>
       <List>
         <ListItem disablePadding>
           <ListItemButton>
-            <WorkSpaces/>
+            <WorkSpaces />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton>
-            <Recent/>
+            <Recent />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton>
-            <Starred/>
+            <Starred />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton>
-            <Templates/>
+            <Templates />
           </ListItemButton>
         </ListItem>
       </List>
     </Box>
   )
   return (
-    <Box sx={ {
-      px:2,
-      width:'100%',
+    <Box sx={{
+      px: 2,
+      width: '100%',
       height: (theme) => theme.trello.appBarHeight,
-      display:'flex',
-      alignItems:'center',
-      justifyContent:'space-between',
-      gap:2,
-      overflowX:'auto',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 2,
+      overflowX: 'auto',
       bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0')
-    } }>
-      <Box sx={ { display:'flex', alignItems:'center', justifyContent:'center', gap:1 } }>
-        <AppsIcon sx={ { color:'white' } } onClick={toggleDrawer(true)}/>
+    }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+        <AppsIcon sx={{ color: 'white' }} onClick={toggleDrawer(true)} />
         <Drawer open={open} onClose={toggleDrawer(false)}>
           {DrawerList}
         </Drawer>
-        <Box sx={ { display:'flex', alignItems:'center', justifyContent:'center', gap:0.5 } }>
-          <SvgIcon component={TrelloIcon} inheritViewBox sx={ { color:'white' } } />
-          <Typography variant='span' sx={ { fontSize:'1.2rem', fontWeight:'bold', color:'white' } }>Trello</Typography>
-        </Box>
-        <Box sx={{ display: { xs:'none', md:'flex' }, gap: 1 }}>
-          <WorkSpaces/>
-          <Recent/>
-          <Starred/>
-          <Templates/>
+        <Link to={'/'}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+            <SvgIcon component={TrelloIcon} inheritViewBox sx={{ color: 'white' }} />
+            <Typography variant='span' sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>Trello</Typography>
+          </Box>
+        </Link>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+          <WorkSpaces />
+          <Recent />
+          <Starred />
+          <Templates />
           <Button
             variant='outlined'
-            startIcon = {<PostAddIcon/>}
-            sx={{ color: 'white', border:'none', '&:hover': { border:'none' } }}>
-              Create</Button>
+            startIcon={<PostAddIcon />}
+            sx={{ color: 'white', border: 'none', '&:hover': { border: 'none' } }}>
+            Create</Button>
         </Box>
       </Box>
-      <Box sx={ { display:'flex', alignItems:'center', justifyContent:'center', gap:1.5 } }>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5 }}>
         <TextField
           id="outlined-search"
           label="Search..."
@@ -104,7 +107,7 @@ const AppBar = () => {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                {searchValue===''? '' : (<CloseIcon
+                {searchValue === '' ? '' : (<CloseIcon
                   fontSize='small'
                   sx={{ color: 'white', cursor: 'pointer' }}
                   onClick={() => setSearchValue('')}
@@ -113,38 +116,38 @@ const AppBar = () => {
             )
           }}
           sx={{
-            minWidth:120,
-            maxWidth:'170px',
+            minWidth: 120,
+            maxWidth: '170px',
             '& label': { color: 'white' },
             '& input': { color: 'white' },
             '& label.Mui-focused': { color: 'white' },
             '& .MuiOutlinedInput-root': {
-              '& fieldset':{
-                borderColor:'white'
+              '& fieldset': {
+                borderColor: 'white'
               },
-              '&:hover fieldset':{
-                borderColor:'white'
+              '&:hover fieldset': {
+                borderColor: 'white'
               },
-              '&.MuiOutlinedInput-root fieldset':{
-                borderColor:'white'
+              '&.MuiOutlinedInput-root fieldset': {
+                borderColor: 'white'
               }
             }
           }}
         />
-        <SelectDarkLight/>
+        <SelectDarkLight />
         <Tooltip title='Notifications' >
           <Badge
             color="success"
             variant="dot"
-            sx={ { cursor:'pointer' } }>
-            <NotificationsNoneIcon sx={{ color: 'white' }}/>
+            sx={{ cursor: 'pointer' }}>
+            <NotificationsNoneIcon sx={{ color: 'white' }} />
           </Badge>
         </Tooltip>
 
         <Tooltip title='Help' >
-          <HelpIcon sx={{ color: 'white' }}/>
+          <HelpIcon sx={{ color: 'white' }} />
         </Tooltip>
-        <Profiles/>
+        <Profiles />
       </Box>
     </Box>
   )

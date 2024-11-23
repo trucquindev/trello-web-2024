@@ -13,6 +13,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentUser, logoutUserAPI } from '~/redux/user/userSlice'
 import { useConfirm } from 'material-ui-confirm'
+import { Link } from 'react-router-dom'
 const WorkSpaces = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl)
@@ -61,13 +62,15 @@ const WorkSpaces = () => {
           'aria-labelledby': 'basic-button-profiles"',
         }}
       >
-        <MenuItem sx={{
-          '&:hover': {
-            color: 'success.light',
-          },
-        }}>
-          <Avatar src={currentUser?.avatar} sx={{ width: '28px', height: '28px', mr: 2 }} /> Profile
-        </MenuItem>
+        <Link to={'/settings/account'} style={{ color: 'inherit' }}>
+          <MenuItem sx={{
+            '&:hover': {
+              color: 'success.light',
+            },
+          }}>
+            <Avatar src={currentUser?.avatar} sx={{ width: '28px', height: '28px', mr: 2 }} /> Profile
+          </MenuItem>
+        </Link>
         <Divider />
         <MenuItem>
           <ListItemIcon>

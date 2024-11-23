@@ -1,6 +1,7 @@
 
 import Board from './pages/Boards/_id'
 import { Route, Routes, Navigate, Outlet } from 'react-router-dom'
+import Settings from '~/pages/Settings/Settings'
 import NotFound from '~/pages/404/NotFound'
 import Auth from '~/pages/Auth/Auth'
 import AccountVerification from '~/pages/Auth/AccountVerification'
@@ -11,9 +12,6 @@ const ProtechtedRoutes = ({ user }) => {
   if (!user) return <Navigate to={'/login'} replace />
   return <Outlet />
 }
-const RedirectHome = ({ user }) => {
-  if (user) return <Navigate to={'/'} replace />
-}
 function App() {
   const currentUser = useSelector(selectCurrentUser)
   return (
@@ -23,11 +21,13 @@ function App() {
       } />
       <Route element={<ProtechtedRoutes user={currentUser} />}>
         <Route path='/boards/:boardId' element={<Board />} />
+
+        {/* user setting */}
+        <Route path='/settings/account' element={<Settings />} />
+        <Route path='/settings/security' element={<Settings />} />
       </Route>
-      <Route element={<RedirectHome user={currentUser} />}>
-        <Route path='/login' element={<Auth />} />
-        <Route path='/register' element={<Auth />} />
-      </Route>
+      <Route path='/login' element={<Auth />} />
+      <Route path='/register' element={<Auth />} />
       <Route path='/accounts/verification' element={<AccountVerification />} />
       <Route path='*' element={<NotFound />} />
     </Routes>
