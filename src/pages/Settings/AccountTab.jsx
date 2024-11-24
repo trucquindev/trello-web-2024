@@ -63,7 +63,6 @@ function AccountTab() {
 
   const uploadAvatar = (e) => {
     // Lấy file thông qua e.target?.files[0] và validate nó trước khi xử lý
-    // console.log('e.target?.files[0]: ', e.target?.files[0])
     const error = singleFileValidator(e.target?.files[0])
     if (error) {
       toast.error(error)
@@ -76,10 +75,20 @@ function AccountTab() {
     // Cách để log được dữ liệu thông qua FormData
     // console.log('reqData: ', reqData)
     // for (const value of reqData.values()) {
-    // console.log('reqData Value: ', value)
+    //   console.log('reqData Value: ', value)
     // }
 
     // Gọi API...
+    toast.promise(dispatch(updateUserAPI(reqData)), {
+      pending: 'Updating ...'
+    }).then((res) => {
+      //ddoanj nay kiem tra k loi- login thanh cong thi thuc hien cac hd can thiet
+      if (!res.error)
+        toast.success('Cập nhật thông tin thành công!')
+      // Luu y du co loi hay khong thi vẫn phải xoa cai file input di neu k sẽ k chọn file cũ lại
+      e.target.value = ''
+    })
+
   }
 
   return (
