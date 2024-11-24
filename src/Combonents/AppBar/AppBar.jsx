@@ -69,10 +69,11 @@ const AppBar = () => {
       bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#2c3e50' : '#1565c0')
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-        <AppsIcon sx={{ color: 'white' }} onClick={toggleDrawer(true)} />
-        <Drawer open={open} onClose={toggleDrawer(false)}>
-          {DrawerList}
-        </Drawer>
+        <Link to={'/boards'}>
+          <Tooltip title="Boards list">
+            <AppsIcon sx={{ color: 'white', verticalAlign: 'middle' }} onClick={toggleDrawer(true)} />
+          </Tooltip>
+        </Link>
         <Link to={'/'}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
             <SvgIcon component={TrelloIcon} inheritViewBox sx={{ color: 'white' }} />
