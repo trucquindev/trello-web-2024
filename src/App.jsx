@@ -7,6 +7,7 @@ import Auth from '~/pages/Auth/Auth'
 import AccountVerification from '~/pages/Auth/AccountVerification'
 import { selectCurrentUser } from '~/redux/user/userSlice'
 import { useSelector } from 'react-redux'
+import Boards from './pages/Boards'
 // Xac dinh route nao can dang nhap xong moi duoc truy cap
 const ProtechtedRoutes = ({ user }) => {
   if (!user) return <Navigate to={'/login'} replace />
@@ -21,6 +22,7 @@ function App() {
       } />
       <Route element={<ProtechtedRoutes user={currentUser} />}>
         <Route path='/boards/:boardId' element={<Board />} />
+        <Route path='/boards' element={<Boards />} />
 
         {/* user setting */}
         <Route path='/settings/account' element={<Settings />} />
