@@ -24,9 +24,10 @@ import TextField from '@mui/material/TextField'
 import { toast } from 'react-toastify'
 import { useConfirm } from 'material-ui-confirm'
 import { cloneDeep } from 'lodash'
-import { createNewCardAPI, deleteColumnAPI } from '~/apis'
+import { createNewCardAPI, deleteColumnAPI, updateColumnDetailsApi } from '~/apis'
 import { updateCurrentActiveBoard, selectCurrentActiveBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { useDispatch, useSelector } from 'react-redux';
+import ToggleFocusInput from '~/Combonents/Form/ToggleFocusInput'
 const Column = ({ column, columnId }) => {
   const dispatch = useDispatch()
   const board = useSelector(selectCurrentActiveBoard)
@@ -119,6 +120,21 @@ const Column = ({ column, columnId }) => {
       })
   }
 
+  const onUpdateColumnTitle = (newTitle) => {
+
+    //Goi API update column va xu ly mot chu trong redux
+    updateColumnDetailsApi(column._id, { title: newTitle }).then(() => {
+      //update dữ liệu board
+      const newBoard = cloneDeep(board);
+      const columnToUpdate = newBoard.columns.find(
+        (c) => column._id === c._id
+      );
+      if (columnToUpdate) {
+        columnToUpdate.title = newTitle;
+      }
+      dispatch(updateCurrentActiveBoard(newBoard))
+    })
+  }
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       <Box
@@ -141,12 +157,8 @@ const Column = ({ column, columnId }) => {
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
-          <Typography variant='h6' sx={{
-            fontSize: '1rem',
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}>
-            {column.title}</Typography>
+          <ToggleFocusInput value={column.title} onChangedValue={onUpdateColumnTitle} data-no-dnd="true"
+          />
           <Box>
             <Tooltip title="More options">
               <KeyboardArrowDownIcon
