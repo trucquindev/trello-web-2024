@@ -35,6 +35,23 @@ export const activeBoardSlice = createSlice({
 
       state.currentActiveBoard = fullBoard;
     },
+    updateCardInBoard: (state, action) => {
+      //update nested data
+      const incomingCard = action.payload;
+
+      // tim tu board > column > card
+      const column = state.currentActiveBoard.columns.find(
+        (i) => i._id === incomingCard.columnId
+      );
+      if (column) {
+        const card = column.cards.find((i) => i._id === incomingCard._id);
+        if (card) {
+          Object.keys(incomingCard).forEach((key) => {
+            card[key] = incomingCard[key];
+          });
+        }
+      }
+    },
   },
   //extraReducers: noi xu li du lieu bat dong bo
   extraReducers: (builder) => {
@@ -42,6 +59,8 @@ export const activeBoardSlice = createSlice({
       // sau khi gọi API thành công, update state
       // action.payload chinh la respone.data khi goi api thanh cong bang axios o tren
       let board = action.payload;
+      // thanh vien trong board se la gop lai 2 mang owners va members
+      board.FE_allUsers = board.owners.concat(board.members);
 
       // xử lí dữ liệu nếu cần thiết
       // sap xep thu tu cac column o day truoc khi dua du lieu xuong ben duoi cac component
@@ -66,7 +85,8 @@ export const activeBoardSlice = createSlice({
 });
 
 // Actions : là nơi dành cho các components bên dưới gọi bằng dispatch() tới nó để cập nhật lại dữ liệu thông qua reducer (chạy đồng bộ)
-export const { updateCurrentActiveBoard } = activeBoardSlice.actions;
+export const { updateCurrentActiveBoard, updateCardInBoard } =
+  activeBoardSlice.actions;
 
 // Selectors: là nơi dành cho các components bên dưới gọi bằng hooks useSelectỏ () để lấy dữ liệu tử kho redux ra xử dụng
 export const selectCurrentActiveBoard = (state) => {

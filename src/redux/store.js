@@ -4,7 +4,7 @@ import { userReducer } from './user/userSlice';
 import storage from 'redux-persist/lib/storage'; //default là storage
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
-
+import { activeCardReducer } from './activeCard/activeCardSlice';
 // CẤU HÌNH REDUX PERSIST
 //https://edvins.io/how-to-use-redux-persist-with-redux-toolkit
 
@@ -18,6 +18,7 @@ const persistConfig = {
 const reducers = combineReducers({
   activeBoard: activeBoardReducer,
   user: userReducer,
+  activeCard: activeCardReducer,
   // Add other reducers here as needed.
 });
 // thuc hien persist reducers
