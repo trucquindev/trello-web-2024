@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
 import Typography from '@mui/material/Typography'
@@ -33,7 +32,7 @@ import CardUserGroup from './CardUserGroup'
 import CardDescriptionMdEditor from './CardDescriptionMdEditor'
 import CardActivitySection from './CardActivitySection'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearCurrentActiveCard, selectCurrentActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
+import { clearAndHideCurrentActiveCard, selectCurrentActiveCard, selectIsShowActiveCard, updateCurrentActiveCard } from '~/redux/activeCard/activeCardSlice'
 import { updateCardDetailAPI } from '~/apis'
 import { updateCardInBoard } from '~/redux/activeBoard/activeBoardSlice'
 import { styled } from '@mui/material/styles'
@@ -63,18 +62,15 @@ const SidebarItem = styled(Box)(({ theme }) => ({
 function ActiveCard() {
   const dispatch = useDispatch()
   const activeCard = useSelector(selectCurrentActiveCard)
+  const isShowModalActiveCard = useSelector(selectIsShowActiveCard)
 
-  // khong dung state de check dong mo modal nua
-  // const [isOpen, setIsOpen] = useState(true)
-  // const handleOpenModal = () => setIsOpen(true)
+  // khong dung state de check dong mo modal nua chung ta se check theo bien isShowModalActiveCard trong redux
   const handleCloseModal = () => {
-    dispatch(clearCurrentActiveCard())
+    dispatch(clearAndHideCurrentActiveCard())
   }
   //Fuction dung chung cho cac truong hop update card title, description, cover, ...
   const callAPIUpdateCard = async (updateData) => {
     const updateCard = await updateCardDetailAPI(activeCard._id, updateData)
-    console.log('🚀 ~ callAPIUpdateCard ~ updateCard title:', updateCard)
-
     //cap nhat lai card dang active trong modal hien tai
     dispatch(updateCurrentActiveCard(updateCard))
     // cap nhat la cai ban ghi card trong activeBoard (nested data)
@@ -88,7 +84,6 @@ function ActiveCard() {
     callAPIUpdateCard({ description: newDescription })
   }
   const onUploadCardCover = (event) => {
-    console.log(event.target?.files[0])
     const error = singleFileValidator(event.target?.files[0])
     if (error) {
       toast.error(error)
@@ -101,11 +96,15 @@ function ActiveCard() {
     })
     // Gọi API...
   }
-
+  // async function de khi add comment xong thi clear input
+  const onAddCardComment = async (commentToAdd) => {
+    await callAPIUpdateCard({ commentToAdd })
+    //
+  }
   return (
     <Modal
       disableScrollLock
-      open={true}
+      open={isShowModalActiveCard}
       onClose={handleCloseModal} // Sử dụng onClose trong trường hợp muốn đóng Modal bằng nút ESC hoặc click ra ngoài Modal
       sx={{ overflowY: 'auto' }}>
       <Box sx={{
@@ -178,7 +177,9 @@ function ActiveCard() {
               </Box>
 
               {/* Feature 04: Xử lý các hành động, ví dụ comment vào Card */}
-              <CardActivitySection />
+              <CardActivitySection
+                cardComments={activeCard?.comments}
+                onAddCardComment={onAddCardComment} />
             </Box>
           </Grid>
 
