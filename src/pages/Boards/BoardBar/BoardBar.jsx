@@ -4,9 +4,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import VpnLockIcon from '@mui/icons-material/VpnLock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import BoltIcon from '@mui/icons-material/Bolt'
-import Button from '@mui/material/Button'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 const menu_style = {
   color: 'white',
   bgcolor: 'transparent',
@@ -57,17 +56,8 @@ const BoardBar = ({ board }) => {
           clickable />
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-        <Button
-          variant='outlined'
-          startIcon={<PersonAddIcon />}
-          sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': { borderColor: 'white' }
-          }}
-        >
-          Invite
-        </Button>
+        {/* MOI USER VAO LAM THANH VIEN CUA BOARD */}
+        <InviteBoardUser boardId={board?._id} />
         {/* XU LI HIEN THI THANH VIEN CUA BOARD */}
         <BoardUserGroup boardUsers={board?.FE_allUsers} />
       </Box>

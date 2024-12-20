@@ -53,13 +53,13 @@ export const userSlice = createSlice({
       // sau khi gọi API thành công, update state
       // action.payload chinh la respone.data khi goi api thanh cong bang axios o tren
       const user = action.payload;
-
       // xử lí dữ liệu nếu cần thiết
 
       //update dữ liệu của currentActiveBoard
 
       state.currentUser = user;
     });
+
     builder.addCase(logoutUserAPI.fulfilled, (state) => {
       state.currentUser = null;
     });

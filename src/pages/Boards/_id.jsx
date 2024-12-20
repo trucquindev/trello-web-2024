@@ -14,12 +14,10 @@ import { cloneDeep } from 'lodash'
 import { useParams } from 'react-router-dom';
 import PageLoadingSpiner from '~/Combonents/Loading/PageLoadingSpiner';
 import ActiveCard from '~/Combonents/Modal/ActiveCard/ActiveCard';
-import { selectCurrentActiveCard } from '~/redux/activeCard/activeCardSlice';
 const Board = () => {
   const dispatch = useDispatch();
   // const [board, setBoard] = useState(null);
   const board = useSelector(selectCurrentActiveBoard)
-  const activeCard = useSelector(selectCurrentActiveCard)
   const { boardId } = useParams()
   useEffect(() => {
     // const boardId = '66fae02074e6f32c05f5201f';
@@ -105,14 +103,13 @@ const Board = () => {
     );
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
-      {/* Modal active caard check dong mo dua theo dieu kien co ton tai data activeCard luu trong redux hay khong thi moi render, moi thoi diem chi ton tai 1 modal card active  */}
-      {activeCard && < ActiveCard />}
+      {/* Modal active caard check dong mo dua theo dieu kien isShowActiveCard luu trong redux hay khong thi moi render, moi thoi diem chi ton tai 1 modal card active  */}
+      < ActiveCard />
       {/* Cac thanh phan con lai cua board */}
       <AppBar />
       <BoardBar board={board} />
       <BoardContent
         board={board}
-
         moveColumns={moveColumns}
         moveCardInTheSameColumn={moveCardInTheSameColumn}
         moveCardToDifferentColumn={moveCardToDifferentColumn}
