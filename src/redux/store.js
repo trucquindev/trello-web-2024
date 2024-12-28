@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'; //default là storage
 import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import { activeCardReducer } from './activeCard/activeCardSlice';
+import { notificationsReducer } from './notifications/notificationsSlice';
 // CẤU HÌNH REDUX PERSIST
 //https://edvins.io/how-to-use-redux-persist-with-redux-toolkit
 
@@ -19,6 +20,7 @@ const reducers = combineReducers({
   activeBoard: activeBoardReducer,
   user: userReducer,
   activeCard: activeCardReducer,
+  notifications: notificationsReducer,
   // Add other reducers here as needed.
 });
 // thuc hien persist reducers
