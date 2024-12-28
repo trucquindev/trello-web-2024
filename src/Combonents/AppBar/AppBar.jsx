@@ -18,12 +18,12 @@ import HelpIcon from '@mui/icons-material/Help'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import List from '@mui/material/List'
-import Drawer from '@mui/material/Drawer'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { Link } from 'react-router-dom'
+import Notifications from './Notifications/Notifications'
 const AppBar = () => {
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = useState('')
@@ -135,15 +135,10 @@ const AppBar = () => {
             }
           }}
         />
+        {/* dark - light - system mode */}
         <SelectDarkLight />
-        <Tooltip title='Notifications' >
-          <Badge
-            color="success"
-            variant="dot"
-            sx={{ cursor: 'pointer' }}>
-            <NotificationsNoneIcon sx={{ color: 'white' }} />
-          </Badge>
-        </Tooltip>
+        {/* xu ly hien thi cac thong bao notifications */}
+        <Notifications />
 
         <Tooltip title='Help' >
           <HelpIcon sx={{ color: 'white' }} />
