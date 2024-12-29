@@ -14,7 +14,10 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import DoneIcon from '@mui/icons-material/Done'
 import NotInterestedIcon from '@mui/icons-material/NotInterested'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchNotificationsAPI, selectCurrentNotifications, updateBoardInvitationAPI } from '~/redux/notifications/notificationsSlice'
+import { fetchNotificationsAPI, selectCurrentNotifications, updateBoardInvitationAPI, addNotifications } from '~/redux/notifications/notificationsSlice'
+import { socketInstance } from '~/main'
+import { selectCurrentUser } from '~/redux/user/userSlice'
+import { useNavigate } from 'react-router-dom'
 const BOARD_INVITATION_STATUS = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -23,26 +26,52 @@ const BOARD_INVITATION_STATUS = {
 
 function Notifications() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector(selectCurrentUser)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
   const handleClickNotificationIcon = (event) => {
     setAnchorEl(event.currentTarget)
+    setNewNotification(false)
   }
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  // bien state kiem tra co thong bao moi hay khong
+  const [newNotification, setNewNotification] = useState(false)
+
   // lay du lieu notification tu trong redux
   const notifications = useSelector(selectCurrentNotifications)
   useEffect(() => {
     dispatch(fetchNotificationsAPI())
-  }, [dispatch])
+
+    // tạo 1 func xử lý khi nhận sk realtime, docs hướng dẫn : https://socket.io/how-to/use-with-react
+    const onReceiveNewInvitation = (invitation) => {
+      // neu user dang nhap la invitee dang luu trong redux
+      if (invitation.inviteeId === user._id) {
+        // them ban ghi invitation moi vao trong redux
+        dispatch(addNotifications(invitation))
+        // cap nhat trang thai dang co thong bao den
+        setNewNotification(true)
+      }
+    }
+
+    // lang nge sk realtime co ten la : BE_USER_INVITED_TO_BOARD
+    socketInstance.on('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
+
+    return () => {
+      // remove event listener
+      socketInstance.off('BE_USER_INVITED_TO_BOARD', onReceiveNewInvitation)
+    }
+  }, [dispatch, user._id])
   // cap nhat status cua 1 loi moi tham gia board
   const updateBoardInvitation = (status, invitationId) => {
-    // console.log('🚀 ~ updateBoardInvitation ~ invitationId:', invitationId)
-    // console.log('status: ', status)
     dispatch(updateBoardInvitationAPI({ invitationId, status }))
       .then(res => {
-        console.log('🚀 ~ updateBoardInvitation ~ res:', res)
+        if (res.payload.boardInvitation.status === BOARD_INVITATION_STATUS.ACCEPTED) {
+          navigate(`/boards/${res.payload.boardInvitation.boardId}`)
+        }
       })
   }
   return (
@@ -50,8 +79,7 @@ function Notifications() {
       <Tooltip title="Notifications">
         <Badge
           color="warning"
-          // variant="none"
-          variant="dot"
+          variant={newNotification ? 'dot' : 'none'}
           sx={{ cursor: 'pointer' }}
           id="basic-button-open-notification"
           aria-controls={open ? 'basic-notification-drop-down' : undefined}
@@ -60,8 +88,7 @@ function Notifications() {
           onClick={handleClickNotificationIcon}
         >
           <NotificationsNoneIcon sx={{
-            // color: 'white'
-            color: 'yellow'
+            color: newNotification ? 'yellow' : 'white'
           }} />
         </Badge>
       </Tooltip>
