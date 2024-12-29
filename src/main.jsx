@@ -15,15 +15,20 @@ import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import { injectStore } from './untils/authorizeAxios.js'
+// cau hinh socketio
+import { io } from 'socket.io-client'
+import { API_ROOT } from './untils/constrain.js';
+export const socketInstance = io(API_ROOT)
 const persistor = persistStore(store)
 
 // kỹ thuật injectStore
 // Giai phap: Inject store : kỹ thuật cần khi sử dụng redux store ở các file ngoài phạm vi component nhu file authorization hien tai
 injectStore(store)
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter basename='/'>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <BrowserRouter basename='/'>
         <CssVarsProvider theme={theme}>
           <ConfirmProvider defaultOptions={{
             allowClose: false,
@@ -38,7 +43,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <ToastContainer position="bottom-left" theme="colored" />
           </ConfirmProvider>
         </CssVarsProvider>
-      </PersistGate>
-    </Provider>
-  </BrowserRouter>
+      </BrowserRouter>
+    </PersistGate>
+  </Provider>
 )
