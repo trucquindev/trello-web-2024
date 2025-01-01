@@ -15,10 +15,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import { injectStore } from './untils/authorizeAxios.js'
-// cau hinh socketio
-import { io } from 'socket.io-client'
-import { API_ROOT } from './untils/constrain.js';
-export const socketInstance = io(API_ROOT)
 const persistor = persistStore(store)
 
 // kỹ thuật injectStore
