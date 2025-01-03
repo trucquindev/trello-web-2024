@@ -9,9 +9,6 @@ import WorkSpaces from './Menus/WorkSpaces'
 import Recent from './Menus/Recent'
 import Starred from './Menus/Starred'
 import Templates from './Menus/Templates'
-import TextField from '@mui/material/TextField'
-import Badge from '@mui/material/Badge'
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import Tooltip from '@mui/material/Tooltip'
 import Profiles from './Menus/Profiles'
 import HelpIcon from '@mui/icons-material/Help'
@@ -19,43 +16,10 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import List from '@mui/material/List'
 import PostAddIcon from '@mui/icons-material/PostAdd'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
-import CloseIcon from '@mui/icons-material/Close'
 import { Link } from 'react-router-dom'
 import Notifications from './Notifications/Notifications'
+import AutoCompleteSearchBoard from './SearchBoards/AutoCompleteSearchBoard'
 const AppBar = () => {
-  const [open, setOpen] = React.useState(false);
-  const [searchValue, setSearchValue] = useState('')
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-  };
-  const DrawerList = (
-    <Box sx={{ width: 200, bgcolor: 'blue', height: '100%' }}>
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <WorkSpaces />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <Recent />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <Starred />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton>
-            <Templates />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Box>
-  )
   return (
     <Box sx={{
       px: 2,
@@ -71,7 +35,7 @@ const AppBar = () => {
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
         <Link to={'/boards'}>
           <Tooltip title="Boards list">
-            <AppsIcon sx={{ color: 'white', verticalAlign: 'middle' }} onClick={toggleDrawer(true)} />
+            <AppsIcon sx={{ color: 'white', verticalAlign: 'middle' }} />
           </Tooltip>
         </Link>
         <Link to={'/'}>
@@ -93,48 +57,7 @@ const AppBar = () => {
         </Box>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1.5 }}>
-        <TextField
-          id="outlined-search"
-          label="Search..."
-          type="text"
-          size='small'
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'white' }} />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                {searchValue === '' ? '' : (<CloseIcon
-                  fontSize='small'
-                  sx={{ color: 'white', cursor: 'pointer' }}
-                  onClick={() => setSearchValue('')}
-                />)}
-              </InputAdornment>
-            )
-          }}
-          sx={{
-            minWidth: 120,
-            maxWidth: '170px',
-            '& label': { color: 'white' },
-            '& input': { color: 'white' },
-            '& label.Mui-focused': { color: 'white' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'white'
-              },
-              '&:hover fieldset': {
-                borderColor: 'white'
-              },
-              '&.MuiOutlinedInput-root fieldset': {
-                borderColor: 'white'
-              }
-            }
-          }}
-        />
+        <AutoCompleteSearchBoard />
         {/* dark - light - system mode */}
         <SelectDarkLight />
         {/* xu ly hien thi cac thong bao notifications */}

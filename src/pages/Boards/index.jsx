@@ -23,7 +23,6 @@ import SidebarCreateBoardModal from './create'
 import { fetchBoardAPI } from '~/apis'
 import { styled } from '@mui/material/styles'
 import { DEFAULT_PAGE, DEFAULT_ITEMS_PER_PAGE } from '~/untils/constrain'
-// Styles của mấy cái Sidebar item menu, anh gom lại ra đây cho gọn.
 const SidebarItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -56,7 +55,6 @@ function Boards() {
   const query = new URLSearchParams(location.search)
   /**
    * Lấy giá trị page từ query, default sẽ là 1 nếu không tồn tại page từ url.
-   * Nhắc lại kiến thức cơ bản hàm parseInt cần tham số thứ 2 là Hệ thập phân (hệ đếm cơ số 10) để đảm bảo chuẩn số cho phân trang
    */
   const page = parseInt(query.get('page') || '1', 10)
   const updateStateData = (res) => {
