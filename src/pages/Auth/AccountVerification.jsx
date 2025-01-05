@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useSearchParams } from 'react-router-dom'
-import PageLoadingSpiner from '~/Combonents/Loading/pageLoadingSpiner'
+import PageLoadingSpiner from '../../Combonents/Loading/PageLoadingSpiner'
 import { verifyUserAPI } from '~/apis'
 const AccountVerification = () => {
   // lấy giá trị email và token url
